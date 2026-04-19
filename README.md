@@ -44,34 +44,40 @@ Token refresh, retries, and callback deduplication are handled automatically.
 - [x] Account balance
 - [x] Transaction status
 - [x] Reversal
-- [ ] QR code *(planned)*
-- [ ] Remittance *(planned)*
+- [ ] QR code _(planned)_
+- [ ] Remittance _(planned)_
 
 ## Project Structure
 
 ```
 lignin/
+├── .github/
+│   └── workflows/
 ├── cmd/
-│   ├── gateway/            # gateway server entrypoint
-│   └── scheduler/          # cron job runner entrypoint
+│   ├── gateway/
+│   └── scheduler/
 ├── internal/
-│   ├── auth/               # OAuth2 token manager (in-memory + Redis cache)
-│   ├── callback/           # signature verification, deduplication
-│   ├── reconciler/         # CSV + PDF export engine (KRA iTax format)
-│   ├── scheduler/          # cron jobs: retries, reconciliation batches
-│   ├── server/             # HTTP handlers, WebSocket hub, middleware
-│   └── store/              # PostgreSQL queries (pgx/v5)
-├── migrations/             # SQL migration files
-├── web/                    # Vue 3 + Vite frontend
+│   ├── auth/
+│   ├── mock/
+│   ├── callback/
+│   ├── reconciler/
+│   ├── scheduler/
+│   ├── server/
+│   │   └── middleware/
+│   ├── store/
+│   ├── telemetry/
+│   └── errors/
+├── migrations/
+├── testdata/
+│   ├── fixtures/
+│   └── golden/
+├── scripts/
+├── docs/
+├── web/
 │   └── src/
 │       ├── components/
-│       ├── composables/    # WebSocket, auth, export hooks
-│       └── views/          # transactions, reconciliation, settings
-├── testdata/               # fixture payloads for integration tests
-├── lignin.go               # public SDK API surface
-├── config.go
-├── go.mod
-└── go.sum
+│       ├── composables/
+│       └── views/
 ```
 
 The `cmd/` binaries are thin — all logic lives in `internal/`. The public SDK API is exported from the root package only.
