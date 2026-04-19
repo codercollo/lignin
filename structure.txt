@@ -1,0 +1,120 @@
+feat/phase-1-base
+
+feat/phase-2-storage
+
+feat/phase-3-modules
+
+feat/phase-4-delivery
+
+lignin/
+├── .github/
+│ └── workflows/
+│ ├── ci.yml # lint, test, build, docker push
+│ └── release.yml # goreleaser config
+├── .golangci.yml # linter config
+├── Makefile # build, test, generate, migrate targets
+├── docker-compose.yml # postgres + redis + app
+├── docker-compose.test.yml # ephemeral testcontainers stack
+├── Dockerfile # multi-stage builder + distroless
+├── .env.example # all ENV vars documented
+├── .env.test # test-only overrides
+├── buf.gen.yaml # protobuf (future-proof)
+├── cmd/
+│ ├── gateway/
+│ │ ├── main.go # wire deps, graceful shutdown
+│ │ └── gateway_integration_test.go # E2E HTTP + WS
+│ └── scheduler/
+│ ├── main.go
+│ └── scheduler_integration_test.go # cron-fire assertions
+├── internal/
+│ ├── auth/
+│ │ ├── token_manager.go # oauth2 + refresh logic
+│ │ ├── token_manager_test.go # table-driven, mock HTTP
+│ │ ├── cache.go # in-memory + redis layer cache
+│ │ └── cache_test.go
+│ ├── mock/
+│ │ └── mock_token_store.go # testify/mock generated
+│ ├── callback/
+│ │ ├── handler.go # signature verify + dispatch
+│ │ ├── handler_test.go # malicious payload tests
+│ │ ├── dedup.go # idempotency key store
+│ │ ├── dedup_test.go # race-condition coverage
+│ │ └── mock_dedup_store.go
+│ ├── reconciler/
+│ │ ├── csv_exporter.go # KRA iTax CSV format
+│ │ ├── csv_exporter_test.go # golden CSV output
+│ │ ├── pdf_exporter.go # PDF layout engine
+│ │ ├── pdf_exporter_test.go # byte-equality tests
+│ │ ├── engine.go # orchestrates batch runs
+│ │ └── engine_test.go
+│ ├── scheduler/
+│ │ ├── retry_job.go # exponential backoff retry
+│ │ ├── retry_job_test.go
+│ │ ├── reconciliation_job.go # batch trigger
+│ │ └── reconciliation_job_test.go
+│ ├── server/
+│ │ ├── router.go # chi/http setup + routes
+│ │ ├── handlers.go # HTTP handlers
+│ │ ├── handlers_test.go # httptest, table-driven
+│ │ ├── ws_hub.go # websocket broadcast hub
+│ │ ├── ws_hub_test.go # concurrency client sim
+│ │ ├── middleware/
+│ │ │ ├── auth.go # JWT / session validation
+│ │ │ ├── ratelimit.go # token-bucket per key
+│ │ │ ├── logging.go # structured log middleware
+│ │ │ ├── recovery.go # panic → 500 recovery
+│ │ │ └── middleware_test.go
+│ ├── store/
+│ │ ├── queries.go # pgx/v5 typed queries
+│ │ ├── queries_test.go # testcontainers pg postgres
+│ │ ├── tx.go # transaction helper
+│ │ └── migrations.go # embed + run migrations
+│ ├── telemetry/
+│ │ ├── otel.go # OTel SDK init traces + metrics
+│ │ ├── metrics.go # prometheus counters/histograms
+│ │ └── logger.go # slog + trace-id injection
+│ └── errors/
+│ ├── errors.go # domain error types + codes
+│ └── errors_test.go
+├── migrations/
+│ ├── 00001_init.up.sql
+│ ├── 00001_init.down.sql
+│ └── 00002_add_idempotency.up.sql
+├── testdata/
+│ ├── fixtures/
+│ │ ├── mpesa_callback.json
+│ │ ├── mpesa_callback_invalid_sig.json
+│ │ └── reconciliation_batch.json
+│ └── golden/
+│ ├── export_2024_01.csv
+│ └── export_2024_01.pdf.sha256
+├── scripts/
+│ ├── seed.go # dev seed data
+│ └── generate.go # go:generate runner
+├── docs/
+│ ├── openapi.yaml # gateway API spec
+│ └── architecture.md # ADRs + system diagram
+├── web/
+│ └── src/
+│ ├── components/
+│ │ ├── TransactionTable.vue
+│ │ ├── TransactionTable.spec.ts
+│ │ └── ReconciliationCard.vue
+│ ├── composables/
+│ │ ├── useWebsocket.ts
+│ │ ├── useWebsocket.spec.ts
+│ │ ├── useExport.ts
+│ │ └── useAuth.ts
+│ ├── views/
+│ │ ├── Transactions.vue
+│ │ ├── Reconciliation.vue
+│ │ └── Settings.vue
+│ ├── vitest.config.ts
+│ ├── playwright.config.ts
+│ └── Transactions.spec.ts
+├── lignin.go # public SDK surface
+├── config.go
+├── config_test.go # env parse validation
+├── go.mod
+├── go.sum
+└── go.work # workspace for cmd modules
