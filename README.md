@@ -9,7 +9,7 @@ Go SDK for the Safaricom Daraja API, plus a self-hostable webhook gateway with g
 ## Install
 
 ```bash
-go get github.com/lignin-dev/lignin
+go get github.com/codercollo/lignin
 ```
 
 Requires Go 1.22+.
