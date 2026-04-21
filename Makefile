@@ -4,7 +4,7 @@ SHELL := /bin/bash
 # ── Variables ──────────────────────────────────────────────────────────────────
 BINARY_GATEWAY  := bin/gateway
 BINARY_SCHED    := bin/scheduler
-MODULE          := github.com/yourusername/lignin
+MODULE          := github.com/codercollo/lignin
 GOFLAGS         := -trimpath -ldflags="-s -w"
 COVERAGE_OUT    := coverage.out
 COVERAGE_HTML   := coverage.html
