@@ -4,7 +4,7 @@ SHELL := /bin/bash
 # ── Variables ──────────────────────────────────────────────────────────────────
 BINARY_GATEWAY  := bin/gateway
 BINARY_SCHED    := bin/scheduler
-MODULE          := github.com/codercollo/lignin
+MODULE          := github.com/yourusername/lignin
 GOFLAGS         := -trimpath -ldflags="-s -w"
 COVERAGE_OUT    := coverage.out
 COVERAGE_HTML   := coverage.html
@@ -62,17 +62,21 @@ vet: ## Run go vet
 	go vet ./...
 
 # ── Database ───────────────────────────────────────────────────────────────────
+
 .PHONY: migrate-up
-migrate-up: ## Apply all pending migrations
-	$(MIGRATE) up
+migrate-up: ## Apply all migrations
+	DATABASE_DSN=$$(grep DATABASE_DSN .env | cut -d '=' -f2-) \
+	go run ./cmd/migrate up
 
 .PHONY: migrate-down
-migrate-down: ## Roll back the last migration
-	$(MIGRATE) down 1
+migrate-down: ## Rollback 1 migration
+	DATABASE_DSN=$$(grep DATABASE_DSN .env | cut -d '=' -f2-) \
+	go run ./cmd/migrate down
 
 .PHONY: migrate-status
-migrate-status: ## Show migration status
-	$(MIGRATE) version
+migrate-status: ## Show migration version
+	DATABASE_DSN=$$(grep DATABASE_DSN .env | cut -d '=' -f2-) \
+	go run ./cmd/migrate version
 
 .PHONY: migrate-create
 migrate-create: ## Create a new migration: make migrate-create NAME=add_foo
